@@ -28,7 +28,7 @@
 +     locale = locale(decimal_mark = ",", encoding = "WINDOWS-1252"), 
 +     trim_ws = TRUE)
 
-# Após iniciar o diálogo abaixo vai aparecer, a barra final indicará quando o arquivo for lido. Enquanto isso pegue um café!!!
+# Após iniciar, aperte enter, o diálogo abaixo vai aparecer, a barra final indicará quando o arquivo for lido. Enquanto isso pegue um café!!!
 
 Parsed with column specification:
 cols(
