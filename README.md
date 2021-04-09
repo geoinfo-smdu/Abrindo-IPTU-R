@@ -1,2 +1,6 @@
-# Abrindo-IPTU-R
-Abrir os dados do IPTU que estão no GeoSampa
+# Abrindo-R-iptu-v1
+Apontamentos para abrir o arquivo do IPTU no software R
+- Verificar codificação de caracteres Windows-1252
+- Verificar a separação dos campos com Semicolon
+
+Esse tutorial só foi possível graças ao MIT
