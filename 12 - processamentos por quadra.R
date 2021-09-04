@@ -12,10 +12,6 @@ setwd(caminho)
 ###### lista de anos com base do IPTU, de 1995 até o ano atual
 ListaAnos <- 1995:(year(today()))
 
-mat = matrix(ncol = 0, nrow = 0)
-IPTU_12_1_final = data.frame(mat)
-rm(mat)
-
 ################## FAZER LISTA DE CAMPOS DE TODOS PRA COMPATIBILIZAR
 ################## FAZER LISTA DE CAMPOS DE TODOS PRA COMPATIBILIZAR
 ################## FAZER LISTA DE CAMPOS DE TODOS PRA COMPATIBILIZAR
@@ -33,9 +29,16 @@ for (ano in ListaAnos){
   arquivo <- paste0( "./00 - dados brutos/IPTU_" , ano , ".csv.gz")
   
   library(stats)
+
+  if (ano == "2016"){
+    temp <- read_csv( arquivo )
+  }
+   
+  else{
+    temp <- read_csv2( arquivo ) 
+  }
   
-  temp <- read_csv2( arquivo ) %>%
-    
+  temp <- temp %>%
 ########## 12_2 - pré-processamentos ##########
 ###### resumindo por quadra ###### 
   # selecionando só colunas de interesse
@@ -76,7 +79,76 @@ for (ano in ListaAnos){
   
 }
 
+###### juntando em uma tabela só ###### 
+ListaAnos <- 1995:(year(today()))
 
-IPTU_12_1_final <- read_csv2("./10 - processamentos/IPTU_2015_ResumoQuadra.csv.gz")
+mat = matrix(ncol = 0, nrow = 0)
+IPTU_12_1_bruto = data.frame(mat)
+IPTU_12_2_final = data.frame(mat)
+rm(mat)
+
+
+
+
+# corrido - para gráficos
+for (ano in ListaAnos){
+  ###### nome do arquivo e leitura
+  arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_ResumoQuadra.csv.gz")
+  
+  library(stats)
+  
+  IPTU_12_1_bruto <- read_csv2( arquivo )
+  
+  if (ListaAnos[1] == ano){
+    IPTU_12_2_final <- IPTU_12_1_bruto
+  }
+  
+  else{
+    IPTU_12_2_final <- bind_rows( IPTU_12_2_final , IPTU_12_1_bruto )
+  }
+  
+  
+}
+
+nome <- paste0("./20 - info/IPTU_ParâmetrosPorAnoPorQuadra.csv.gz")
+write_csv2( IPTU_12_2_final, nome )
+
+
+
+
+# por quadra - para espacializações
+for (ano in ListaAnos){
+  ###### nome do arquivo e leitura
+  arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_ResumoQuadra.csv.gz")
+  
+  library(stats)
+  
+  IPTU_12_1_bruto <- read_csv2( arquivo )
+  
+  IPTU_12_1_bruto <- IPTU_12_1_bruto %>% 
+    rename_with(   ~paste0( ano , "_" , .)  , -c(1:2)   ) %>%
+    select( -c( ano ) )
+  
+  if (ListaAnos[1] == ano){
+    IPTU_12_2_final <- IPTU_12_1_bruto
+  }
+  
+  else{
+    IPTU_12_2_final <- full_join( IPTU_12_2_final , IPTU_12_1_bruto )
+  }
+  
+  
+}
+
+nome <- paste0("./20 - info/IPTU_ParâmetrosPorQuadra.csv.gz")
+write_csv2( IPTU_12_2_final, nome )
+
+
+
+
+
+
+rm(IPTU_12_1_bruto)
+rm(IPTU_12_2_final)
 
 
