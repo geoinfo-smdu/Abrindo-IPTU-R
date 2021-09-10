@@ -12,18 +12,6 @@ setwd(caminho)
 ###### lista de anos com base do IPTU, de 1995 até o ano atual
 ListaAnos <- 1995:(year(today()))
 
-################## FAZER LISTA DE CAMPOS DE TODOS PRA COMPATIBILIZAR
-################## FAZER LISTA DE CAMPOS DE TODOS PRA COMPATIBILIZAR
-################## FAZER LISTA DE CAMPOS DE TODOS PRA COMPATIBILIZAR
-################## FAZER LISTA DE CAMPOS DE TODOS PRA COMPATIBILIZAR
-################## FAZER LISTA DE CAMPOS DE TODOS PRA COMPATIBILIZAR
-
-################## INSERIR COL TYPES PRA VER SE DIMINUI GASTO DE MEMÓRIA
-################## INSERIR COL TYPES PRA VER SE DIMINUI GASTO DE MEMÓRIA
-################## INSERIR COL TYPES PRA VER SE DIMINUI GASTO DE MEMÓRIA
-################## INSERIR COL TYPES PRA VER SE DIMINUI GASTO DE MEMÓRIA
-################## INSERIR COL TYPES PRA VER SE DIMINUI GASTO DE MEMÓRIA
-
 for (ano in ListaAnos){
   ###### nome do arquivo e leitura
   arquivo <- paste0( "./00 - dados brutos/IPTU_" , ano , ".csv.gz")
@@ -150,5 +138,49 @@ write_csv2( IPTU_12_2_final, nome )
 
 rm(IPTU_12_1_bruto)
 rm(IPTU_12_2_final)
+
+
+########## 21_1 -  ##########
+
+arquivo <- paste0( "./20 - info/", "IPTU_ParâmetrosPorAnoPorQuadra.csv.gz" )
+IPTU_21_1_gráficos_bruto <- na.omit( read_csv2( arquivo ) )
+
+
+########## 21_2 - tipos de áreas em 2020 ##########
+IPTU_21_2 <- 
+  
+  
+  IPTU_21_1_gráficos_bruto %>%
+  group_by( ano ) %>%
+  summarise( construído_total = sum( construído ) ) %>%
+  mutate( construído_total = construído_total - lag( construído_total , 1 ) ) %>%
+  ggplot( aes( x = factor(ano) , y = construído_total/1000000 ) ) +
+  geom_bar( stat = "identity" )
+
+
+
+
+
+
+
+
+
+
+
+
+variáveis <- tail( colnames( read_csv2( paste0("./10 - processamentos/IPTU_" , "1995" , "_ResumoQuadra.csv.gz")  , n_max = 1 ) ) , -1 )
+arquivo <- paste0("./20 - info/" , "IPTU_ResumoQuadra.csv.gz")
+
+IPTU_21_2_geo_bruto <- read_csv2( arquivo )
+
+# escolher a variável e inserir a posição abaixo conforme a lista variáveis
+variávelDesejada <- 3
+índices <- seq( from = variávelDesejada, to = ncol(IPTU_21_bruto), by = 12 )
+
+# 
+col_index <- seq(1:ncol(IPTU_21_bruto)) 
+IPTU_21_bruto %>%
+  select( 1 , col_index[ col_index %in% índices != 0 ] ) %>% 
+  ggplot( aes( x = factor( str_sub(  ) )  ) )
 
 
