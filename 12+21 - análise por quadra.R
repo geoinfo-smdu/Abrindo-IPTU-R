@@ -3,28 +3,100 @@ library(readr)
 library(stringr)
 library(lubridate)
 
-# CONFIGURAR CAMINHO MANUALMENTE
 # caminho <- "pasta do repositório"
 setwd(caminho)
 
-########## 12_1 - leitura dos dados do IPTU ##########
+# função para leitura
+le_IPTU <- function( listaAnos , linhas ){
+  
+  listaCampos = c( 
+    "NUMERO DO CONTRIBUINTE",
+    "ANO DO EXERCICIO",
+    "NUMERO DO CONDOMINIO",
+    "CODLOG DO IMOVEL",
+    "CEP DO IMOVEL"
+  )
+  
+  for (ano in listaAnos){
+    
+    print( paste( "Processando" , ano )  )
+    
+    arquivo <- paste0( "./00 - dados brutos/IPTU_" , ano , ".csv.gz")
+    
+    # leitura diferente pra 2016
+    if (ano == 2016){
+      temp <- read_csv( arquivo , n_max = linhas , locale=locale(encoding="latin1") ) %>%
+        mutate( across( starts_with( c("VALOR","TESTADA","FATOR")) , ~ str_replace( . ,",",".")  ) ) %>%
+        mutate( across(  starts_with( c("VALOR","TESTADA","FATOR") )  , ~ as.numeric(.) )  ) %>%
+        mutate( across(  starts_with( c("VALOR","TESTADA") )  , ~ .x/100 )  )
+    }
+    
+    else{
+      temp <- read_csv2( arquivo , n_max = linhas , locale=locale(encoding="latin1")) 
+    }
+    
+    # extraindo só campos que precisa
+    temp <- temp %>%
+      select( listaCampos , contains("FRENTE") , "AREA DO TERRENO":"FATOR DE OBSOLESCENCIA" )
+    
+    # renomeando
+    names(temp) <- c("SQL", "Ano", "Condo","Codlog","CEP","Frentes", "Terreno","Construído","Ocupado",
+                     "ValorTerreno","ValorConstr","AnoConstr","Pavs","Testada","TipoUso",
+                     "TipoPadrão","TipoTerr","FatorObsoles"
+                    )
+    
+    # arrumando campo de pavimentos
+    temp$Pavs <- as.numeric(temp$Pavs)
+    
+    # arrumando condomínios pra não contar duplicado
+    temp <- temp %>%
+      mutate( SQL = case_when(
+                                Condo != "00-0" ~ paste0( str_sub( SQL , 0 , 6) , "-C" , Condo ),
+                                TRUE ~ SQL
+                              )
+              ) %>%
+      group_by( SQL ) %>%
+      mutate(
+              Construído = sum(Construído),
+              across( Ocupado:Testada, median ),
+              FatorObsoles = median(FatorObsoles)
+              
+            ) %>%
+      distinct( SQL , .keep_all = TRUE )
+      
+    
+    arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_arrumado.csv.gz")
+    
+    write.csv2( temp , arquivo )
+    
+  }
+  
+}
 
-###### lista de anos com base do IPTU, de 1995 até o ano atual
+######## 12_1 - leitura dos dados do IPTU ##########
+#### preparando o arquivo ####
+# lista de anos com base do IPTU, de 1995 até o ano atual
 ListaAnos <- 1995:(year(today()))
 
+# leitura e junção dos arquivos arrumados
+le_IPTU( ListaAnos , Inf )
+
+
+
+
+
+
+
+
 for (ano in ListaAnos){
-  ###### nome do arquivo e leitura
+  # nome do arquivo e leitura
   arquivo <- paste0( "./00 - dados brutos/IPTU_" , ano , ".csv.gz")
   
   library(stats)
-
-  if (ano == "2016"){
-    temp <- read_csv( arquivo )
-  }
-   
-  else{
-    temp <- read_csv2( arquivo ) 
-  }
+  
+  
+  
+  
   
   temp <- temp %>%
 ########## 12_2 - pré-processamentos ##########
