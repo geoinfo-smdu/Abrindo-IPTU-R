@@ -25,19 +25,19 @@ le_IPTU <- function( listaAnos , linhas ){
     
     # leitura diferente pra 2016
     if (ano == 2016){
-      temp <- read_csv( arquivo , n_max = linhas , locale=locale(encoding="latin1") ) %>%
+      temp <- read_csv( arquivo , n_max = linhas , locale=locale(encoding="latin1") , show_col_types = FALSE ) %>%
         mutate( across( starts_with( c("VALOR","TESTADA","FATOR")) , ~ str_replace( . ,",",".")  ) ) %>%
         mutate( across(  starts_with( c("VALOR","TESTADA","FATOR") )  , ~ as.numeric(.) )  ) %>%
         mutate( across(  starts_with( c("VALOR","TESTADA") )  , ~ .x/100 )  )
     }
     
     else{
-      temp <- read_csv2( arquivo , n_max = linhas , locale=locale(encoding="latin1")) 
+      temp <- read_csv2( arquivo , n_max = linhas , locale=locale(encoding="latin1") , show_col_types = FALSE) 
     }
     
     # extraindo só campos que precisa
     temp <- temp %>%
-      select( listaCampos , contains("FRENTE") , "AREA DO TERRENO":"FATOR DE OBSOLESCENCIA" )
+      select( all_of(listaCampos) , contains("FRENTE") , "AREA DO TERRENO":"FATOR DE OBSOLESCENCIA" )
     
     # renomeando
     names(temp) <- c("SQL", "Ano", "Condo","Codlog","CEP","Frentes", "Terreno","Construído","Ocupado",
