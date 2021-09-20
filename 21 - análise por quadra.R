@@ -3,6 +3,7 @@ library(readr)
 library(stringr)
 library(lubridate)
 library(stats)
+library(ggplot2)
 
 # caminho <- "pasta do repositório"
 setwd(caminho)
@@ -54,9 +55,9 @@ write_csv2( IPTU_21_0 , arquivo )
 
 #### gráfico ####
 
-IPTU_21_1_gráficos_bruto %>%
+IPTU_21_0 %>%
   group_by( ano ) %>%
-  summarise( construído_total = sum( construído ) ) %>%
-  mutate( construído_total = construído_total - lag( construído_total , 1 ) ) %>%
+  summarise( Construído_soma = sum( Construído_soma , na.rm = TRUE ) ) %>%
+  mutate( construído_total = Construído_soma - lag( Construído_soma , 1 ) ) %>%
   ggplot( aes( x = factor(ano) , y = construído_total/1000000 ) ) +
   geom_bar( stat = "identity" )
