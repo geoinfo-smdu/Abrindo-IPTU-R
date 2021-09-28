@@ -4,11 +4,13 @@ library(stringr)
 library(lubridate)
 library(stats)
 library(ggplot2)
+library(sf)
 
 # caminho <- "pasta do repositório"
 setwd(caminho)
 
-#### resumindo por quadra ####
+######## resumindo por quadra ########
+####  ####
 # lista de anos com base do IPTU, de 1995 até o ano atual
 ListaAnos <- 1995:(year(today()))
 
@@ -53,6 +55,23 @@ for (ano in ListaAnos){
 arquivo <- paste0( "./20 - info/21 - por quadra - IPTU" , ".csv.gz")
 write_csv2( IPTU_21_0 , arquivo )
 
+######## juntando geometria e geografia ########
+#### juntando geometria à tabela ####
+# lendo arquivo
+arquivo2 <- "./00 - dados brutos/geo.gpkg"
+
+quadras <- st_read( arquivo2 , layer = "Quadras fiscais" ) %>%
+  # criando coluna SQ
+  mutate( SQ = paste0( qd_setor , qd_fiscal ) ) %>%
+  # agrupando as geometrias das quadras com subquadras
+  group_by( qd_setor , qd_fiscal , qd_tipo , SQ ) %>% 
+  summarise() %>% 
+  ungroup() 
+
+# salvando processamento
+st_write( quadras , "./10 - processamentos/geo.gpkg" , "Quadras fiscais sem subquadras" )
+
+#### associando a diversas divisões ####
 IPTU_21_0 <- read_csv2( arquivo )
 
 #### gráficos ####
