@@ -53,11 +53,18 @@ for (ano in ListaAnos){
 arquivo <- paste0( "./20 - info/21 - por quadra - IPTU" , ".csv.gz")
 write_csv2( IPTU_21_0 , arquivo )
 
-#### gráfico ####
+IPTU_21_0 <- read_csv2( arquivo )
 
-IPTU_21_0 %>%
+#### gráficos ####
+
+# novas áreas construídas por ano
+IPTU_21_1_ACporano <- IPTU_21_0 %>%
   group_by( ano ) %>%
   summarise( Construído_soma = sum( Construído_soma , na.rm = TRUE ) ) %>%
-  mutate( construído_total = Construído_soma - lag( Construído_soma , 1 ) ) %>%
+  ungroup() %>%
+  mutate( construído_total = Construído_soma - lag( Construído_soma , 1 ) )
+
+IPTU_21_1_ACporano %>%
   ggplot( aes( x = factor(ano) , y = construído_total/1000000 ) ) +
   geom_bar( stat = "identity" )
+
