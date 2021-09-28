@@ -52,12 +52,9 @@ for (ano in ListaAnos){
   
 }
 
-arquivo <- paste0( "./20 - info/21 - por quadra - IPTU" , ".csv.gz")
-write_csv2( IPTU_21_0 , arquivo )
-
 ######## juntando geometria e geografia ########
 #### juntando geometria à tabela ####
-# lendo arquivo
+# lendo arquivo geopackage contendo quadras
 arquivo2 <- "./00 - dados brutos/geo.gpkg"
 
 quadras <- st_read( arquivo2 , layer = "Quadras fiscais" ) %>%
@@ -66,10 +63,29 @@ quadras <- st_read( arquivo2 , layer = "Quadras fiscais" ) %>%
   # agrupando as geometrias das quadras com subquadras
   group_by( qd_setor , qd_fiscal , qd_tipo , SQ ) %>% 
   summarise() %>% 
-  ungroup() 
+  ungroup() %>%
 
 # salvando processamento
 st_write( quadras , "./10 - processamentos/geo.gpkg" , "Quadras fiscais sem subquadras" )
+
+# juntando quadras arrumadas ao tabelão
+IPTU_21_0 <- IPTU_21_0 %>% inner_join( quadras %>% select(SQ,geom) )
+
+# salvando
+arquivo <- paste0( "./20 - info/21 - por quadra - IPTU" , ".csv.gz")
+write_csv2( IPTU_21_0 , arquivo )
+
+##############
+############## MOVER O DE CIMA PRA O FINAL, PRA EXPORTAR QUADRAS CONTENDO ASSOCIAÇÃO
+############## COM AS DIVISÕES
+##############
+
+
+
+
+
+
+
 
 #### associando a diversas divisões ####
 IPTU_21_0 <- read_csv2( arquivo )
