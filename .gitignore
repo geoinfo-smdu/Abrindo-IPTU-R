@@ -64,3 +64,5 @@ vignettes/*.pdf
 00 - dados brutos/IPTU_2018.csv.gz
 00 - dados brutos/IPTU_2019.csv.gz
 00 - dados brutos/IPTU_2020.csv.gz
+00 - dados brutos/csv-gzip.bat
+00 - dados brutos/msp_empreendimentos_sisacoe.xlsx
