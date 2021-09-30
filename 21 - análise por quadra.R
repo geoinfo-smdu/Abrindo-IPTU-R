@@ -38,7 +38,7 @@ for (ano in ListaAnos){
             )
   
   # juntando
-  if (ano == 1995){
+  if (ano == ListaAnos[1]){
     IPTU_21_0 <- temp
   } else{
     IPTU_21_0 <- bind_rows( IPTU_21_0 , temp )
