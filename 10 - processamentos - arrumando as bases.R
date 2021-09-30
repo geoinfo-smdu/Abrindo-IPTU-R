@@ -4,7 +4,6 @@ library(stringr)
 library(lubridate)
 
 # caminho <- "pasta do repositório"
-setwd(caminho)
 
 #### deixando só as variáveis de interesse por ano por lote (considerando o condomínio inteiro como um lote só)  ####
 # lista de anos com base do IPTU, de 1995 até o ano atual
@@ -66,7 +65,7 @@ for (ano in ListaAnos){
           ) %>%
     ungroup() %>%
     # removendo instâncias repetidas do mesmo condomínio
-    distinct( SQL , .keep_all = TRUE ) 
+    distinct( SQL , .keep_all = TRUE ) %>%
     # extraindo quadra e calculando CA e TO do lote para futura comparação
     mutate(
             SQ = str_sub(SQL,0,6),
