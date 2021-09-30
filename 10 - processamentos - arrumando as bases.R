@@ -45,26 +45,35 @@ for (ano in ListaAnos){
                    "TipoPadrão","TipoTerr","FatorObsoles"
   )
   
-  # arrumando campo de pavimentos
-  temp$Pavs <- as.numeric(temp$Pavs)
   
-  # arrumando condomínios pra não contar duplicado
   temp <- temp %>%
-    mutate( SQL = case_when(
-      Condo != "00-0" ~ paste0( str_sub( SQL , 0 , 6) , "-C" , Condo ),
-      TRUE ~ SQL
-    )
-    ) %>%
+    mutate(
+            # arrumando campo de pavimentos
+            Pavs = as.numeric(Pavs),
+            # arrumando condomínios pra não contar duplicado
+            SQL = case_when(
+                            Condo != "00-0" ~ paste0( str_sub( SQL , 0 , 6) , "-C" , Condo ),
+                            TRUE ~ SQL
+                          )
+          ) %>%
     group_by( SQL ) %>%
     mutate(
-      Construído = sum(Construído),
-      Ocupado = max(Ocupado),
-      across( ValorTerreno:Testada, median ),
-      FatorObsoles = median(FatorObsoles)
-      
-    ) %>%
+            # consolidando um valor por lote/condomínio, mas ainda com várias instâncias
+            Construído = sum(Construído),
+            Ocupado = max(Ocupado),
+            across( ValorTerreno:Testada, median ),
+            FatorObsoles = median(FatorObsoles)
+          ) %>%
     ungroup() %>%
-    distinct( SQL , .keep_all = TRUE )
+    # removendo instâncias repetidas do mesmo condomínio
+    distinct( SQL , .keep_all = TRUE ) 
+    # extraindo quadra e calculando CA e TO do lote para futura comparação
+    mutate(
+            SQ = str_sub(SQL,0,6),
+            ano = ano,
+            CA_lote = Construído/Terreno,
+            TO_lote = Ocupado/Terreno
+          ) 
   
   
   arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_arrumado.csv.gz")

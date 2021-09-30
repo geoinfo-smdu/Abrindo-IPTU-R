@@ -21,13 +21,6 @@ for (ano in ListaAnos){
   
   # cálculos por lote antes de resumir por quadra
   temp <- read_csv2( arquivo , locale=locale(encoding="latin1") ) %>%
-    # extraindo quadra e calculando CA e TO do lote para futura comparação
-    mutate(
-      SQ = str_sub(SQL,0,6),
-      ano = ano,
-      CA_lote = Construído/Terreno,
-      TO_lote = Ocupado/Terreno
-    ) %>%
     # resumindo por quadra
     group_by( ano , SQ ) %>%
     # combinando por soma ou mediana os atributos
