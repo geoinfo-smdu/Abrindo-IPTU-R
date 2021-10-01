@@ -80,15 +80,3 @@ for (ano in ListaAnos){
   write_csv2( temp , arquivo )
   
 }
-
-
-for (ano in ListaAnos){
-  
-  print( paste( "Processando" , ano )  )
-  arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_arrumado.csv.gz")
-  temp <- read_csv2( arquivo , locale=locale(encoding="latin1") )
-  
-  arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_arrumado.csv.gz")
-  write_csv2( temp , arquivo )
-  
-}
