@@ -8,7 +8,6 @@ library(ggplot2)
 library(sf)
 
 # caminho <- "pasta do repositório"
-setwd(caminho)
 
 ######## resumindo por quadra ########
 ####  ####
