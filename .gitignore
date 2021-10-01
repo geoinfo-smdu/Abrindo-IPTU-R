@@ -66,3 +66,30 @@ vignettes/*.pdf
 00 - dados brutos/IPTU_2020.csv.gz
 00 - dados brutos/csv-gzip.bat
 00 - dados brutos/msp_empreendimentos_sisacoe.xlsx
+10 - processamentos/geo.gpkg
+10 - processamentos/IPTU_1995_arrumado.csv.gz
+10 - processamentos/IPTU_1996_arrumado.csv.gz
+10 - processamentos/IPTU_1997_arrumado.csv.gz
+10 - processamentos/IPTU_1998_arrumado.csv.gz
+10 - processamentos/IPTU_1999_arrumado.csv.gz
+10 - processamentos/IPTU_2000_arrumado.csv.gz
+10 - processamentos/IPTU_2001_arrumado.csv.gz
+10 - processamentos/IPTU_2002_arrumado.csv.gz
+10 - processamentos/IPTU_2003_arrumado.csv.gz
+10 - processamentos/IPTU_2004_arrumado.csv.gz
+10 - processamentos/IPTU_2005_arrumado.csv.gz
+10 - processamentos/IPTU_2006_arrumado.csv.gz
+10 - processamentos/IPTU_2007_arrumado.csv.gz
+10 - processamentos/IPTU_2008_arrumado.csv.gz
+10 - processamentos/IPTU_2009_arrumado.csv.gz
+10 - processamentos/IPTU_2010_arrumado.csv.gz
+10 - processamentos/IPTU_2011_arrumado.csv.gz
+10 - processamentos/IPTU_2012_arrumado.csv.gz
+10 - processamentos/IPTU_2013_arrumado.csv.gz
+10 - processamentos/IPTU_2014_arrumado.csv.gz
+10 - processamentos/IPTU_2015_arrumado.csv.gz
+10 - processamentos/IPTU_2016_arrumado.csv.gz
+10 - processamentos/IPTU_2017_arrumado.csv.gz
+10 - processamentos/IPTU_2018_arrumado.csv.gz
+10 - processamentos/IPTU_2019_arrumado.csv.gz
+10 - processamentos/IPTU_2020_arrumado.csv.gz
