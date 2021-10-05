@@ -17,10 +17,19 @@ ListaAnos <- 1995:(year(today()))
 for (ano in ListaAnos){
   
   print( paste( "Processando" , ano )  )
-  arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_arrumado.csv.gz")
+  arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_loteArrumado.csv.gz")
+  
+  temp <- read_csv2( arquivo , locale=locale(encoding="UTF8") )
   
   # cálculos por lote antes de resumir por quadra
-  temp <- read_csv2( arquivo , locale=locale(encoding="UTF8") ) %>%
+  temp <- temp %>%
+    # resumindo usos e padrões
+#    mutate(
+#            TipoUso = ,
+#            UsoH = case_when(
+#                                  str_detect( TipoUso, "" )
+#                                ),
+#          ) %>%
     # resumindo por quadra
     group_by( ano , SQ ) %>%
     # combinando por soma ou mediana os atributos
@@ -28,6 +37,7 @@ for (ano in ListaAnos){
                 across( ValorTerreno:AnoConstr , ~weighted.mean( . , Construído ) , .names = "{.col}_ponderado" ),
                 across( Frentes:Ocupado , sum , .names = "{.col}_soma" ),
                 across( c(ValorTerreno:Testada,CA_lote:TO_lote) , median , .names = "{.col}_mediana" ),
+#                UsoH = 
               ) %>%
     ungroup() %>%
     # CA e TO da quadra toda, valor m2 e ano ponderados
@@ -69,8 +79,12 @@ quadras <- st_read( arquivo2 , layer = "4.06 - Cadastro - Quadras fiscais sem su
 
 # juntando quadras arrumadas ao tabelão
 IPTU_21_0 <- IPTU_21_0 %>%
+  # juntando a geometria e transformando camada em georreferenciada
   inner_join( quadras %>% select(SQ,geom) ) %>%
-  st_as_sf(sf_column_name = "geom")
+  st_as_sf(sf_column_name = "geom") %>%
+  
+
+############### FALTA JUNTAR MACROAREA MACROZONA ETC
 
 # salvando
 st_write( IPTU_21_0 , "./20 - info/21_2 - resumo por quadra.gpkg" , "geo" )

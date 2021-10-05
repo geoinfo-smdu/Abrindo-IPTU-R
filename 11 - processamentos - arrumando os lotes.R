@@ -75,7 +75,7 @@ for (ano in ListaAnos){
           ) 
   
   
-  arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_arrumado.csv.gz")
+  arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_loteArrumado.csv.gz")
   
   write_csv2( temp , arquivo )
   
