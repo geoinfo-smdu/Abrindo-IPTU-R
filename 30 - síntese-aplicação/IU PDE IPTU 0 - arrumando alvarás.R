@@ -28,7 +28,7 @@ alvaras <- read_excel( arquivo ) %>%
           SQ = str_sub( SQL , 0 , 6 )
         ) %>%
   # só linhas com ano de processo administrativo
-  filter( is.na( ano_processo_adm ) == FALSE | ano_processo_adm < 2000 ) %>%
+  filter( is.na( ano_processo_adm ) == FALSE & ano_processo_adm > 2000 ) %>%
   # pegando só o alvará mais recente pra cada SQL
   group_by( SQL ) %>%
   slice_max( alvara_numero ) %>%
