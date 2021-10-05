@@ -67,3 +67,6 @@ vignettes/*.pdf
 00 - dados brutos/csv-gzip.bat
 00 - dados brutos/msp_empreendimentos_sisacoe.xlsx
 10 - processamentos/geo.gpkg
+20 - info/21_2 - resumo por quadra.gpkg
+00 - dados brutos/geo.gpkg-shm
+00 - dados brutos/geo.gpkg-wal
