@@ -78,7 +78,7 @@ alvaras_ano_alvara_AC <- alvaras %>%
   summarize( novas_AC_alvara = sum(ac_total) ) %>%
   ungroup()
 
-ListaAnos <- 2013:2020
+ListaAnos <- 2012:2020
 
 for (ano in ListaAnos){
   
@@ -119,7 +119,7 @@ iptu_lotes %>%
   # puxando o ano do processo administrativo mais antigo
   group_by( Ano , SQ ) %>%
   slice_min( ano_processo_adm ) %>%
-  ungroup() %>% 
+  ungroup() %>%
   # cumpriu 85% da nova área construída no processo administrativo mais antigo?
   mutate( 
           atingiuAlvara = case_when(
@@ -129,7 +129,7 @@ iptu_lotes %>%
           
         ) %>%
   # pegando só as áreas previstas no alvará que apareceram no IPTU
-  filter( atingiuAlvara == 1 ) %>%
+  filter( atingiuAlvara == 1 ) %>% 
   # agrupando por ano de processo administrativo X ano do IPTU
   group_by( ano_processo_adm , Ano  ) %>%
   summarize( construídoIPTU_x_totalAnoProcesso = (sum( variaçãoConstruído ) / median(total_AC_ano_processo))*100 ) %>%
@@ -138,8 +138,8 @@ iptu_lotes %>%
   # gráfico
   ggplot( aes( x = ano_processo_adm , y = Ano , size = construídoIPTU_x_totalAnoProcesso ) ) + 
   geom_point( alpha = 0.7 ) +
-  scale_x_continuous("Ano do processo administrativo", limits = c(2007,2020) ,breaks = seq(2006,2019) ) +
-  scale_y_continuous("Primeiro ano no IPTU", limits = c(2013,2020) , breaks = seq(2013,2020)) +
+  scale_x_continuous("Ano do processo administrativo", limits = c(2010,2019) ,breaks = seq(2010,2019) ) +
+  scale_y_continuous("Primeiro ano no IPTU", limits = c(2012,2020) , breaks = seq(2013,2020)) +
   geom_text( aes( label = paste0(round(construídoIPTU_x_totalAnoProcesso,0),"%") ) , vjust = 2.5 , size = 3  ) + 
   scale_size( range = c(1, 15) ) +
   theme(
