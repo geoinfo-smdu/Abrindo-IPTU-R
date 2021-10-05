@@ -65,8 +65,8 @@ iptu_alvará <- iptu %>%
   distinct() %>%
   # extraindo só as colunas necessárias
   select( ano_processo_adm , alvara_ano_emissao , Ano , SQL , id , variaçãoConstruído  )
-  #View() %>%
-  
+#View() %>%
+
 
 
 #### gráfico anos do processo administrativo x ano IPTU ####
@@ -88,8 +88,8 @@ iptu_alvará  %>%
   geom_text( aes( label = paste0(round(novas_AC_porcent_ano_processo,2)*100,"%") ) , vjust = 3.6 , size = 4  ) + 
   scale_size( range = c(.1, 20) ) +
   theme(
-          legend.position = "bottom",
-        ) +
+    legend.position = "bottom",
+  ) +
   labs(size="% de novas áreas construídas do ano do processo")
 
 
