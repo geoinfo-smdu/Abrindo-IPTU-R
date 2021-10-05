@@ -59,10 +59,11 @@ quadras <- st_read( arquivo2 , layer = "4.06 - Cadastro - Quadras fiscais" ) %>%
   # agrupando as geometrias das quadras com subquadras
   group_by( qd_setor , qd_fiscal , qd_tipo , SQ ) %>% 
   summarise() %>% 
-  ungroup() %>%
+  ungroup()
 
 # salvando processamento
 st_write( quadras , "./10 - processamentos/geo.gpkg" , "4.06 - Cadastro - Quadras fiscais sem subquadras" )
+
 arquivo2 <- "./10 - processamentos/geo.gpkg"
 quadras <- st_read( arquivo2 , layer = "4.06 - Cadastro - Quadras fiscais sem subquadras" ) 
 
@@ -72,17 +73,7 @@ IPTU_21_0 <- IPTU_21_0 %>%
   st_as_sf(sf_column_name = "geom")
 
 # salvando
-arquivo <- "./20 - info/21_2 - resumo por quadra.csv.gz"
-write_csv2( IPTU_21_0 , arquivo )
-
-##############
-############## MOVER O DE CIMA PRA O FINAL, PRA EXPORTAR QUADRAS CONTENDO ASSOCIAÇÃO
-############## COM AS DIVISÕES
-##############
-
-
-
-
+st_write( IPTU_21_0 , "./20 - info/21_2 - resumo por quadra.gpkg" , "geo" )
 
 
 
