@@ -20,7 +20,7 @@ for (ano in ListaAnos){
   arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_arrumado.csv.gz")
   
   # cálculos por lote antes de resumir por quadra
-  temp <- read_csv2( arquivo , locale=locale(encoding="latin1") ) %>%
+  temp <- read_csv2( arquivo , locale=locale(encoding="UTF8") ) %>%
     # resumindo por quadra
     group_by( ano , SQ ) %>%
     # combinando por soma ou mediana os atributos
@@ -45,12 +45,15 @@ for (ano in ListaAnos){
   
 }
 
+arquivo <- "./20 - info/21_1 - resumo por quadra (sem geometria).csv.gz"
+write_csv2( IPTU_21_0 , arquivo )
+
 ######## juntando geometria e geografia ########
 #### juntando geometria à tabela ####
 # lendo arquivo geopackage contendo quadras
 arquivo2 <- "./00 - dados brutos/geo.gpkg"
 
-quadras <- st_read( arquivo2 , layer = "Quadras fiscais" ) %>%
+quadras <- st_read( arquivo2 , layer = "4.06 - Cadastro - Quadras fiscais" ) %>%
   # criando coluna SQ
   mutate( SQ = paste0( qd_setor , qd_fiscal ) ) %>%
   # agrupando as geometrias das quadras com subquadras
@@ -59,13 +62,17 @@ quadras <- st_read( arquivo2 , layer = "Quadras fiscais" ) %>%
   ungroup() %>%
 
 # salvando processamento
-st_write( quadras , "./10 - processamentos/geo.gpkg" , "Quadras fiscais sem subquadras" )
+st_write( quadras , "./10 - processamentos/geo.gpkg" , "4.06 - Cadastro - Quadras fiscais sem subquadras" )
+arquivo2 <- "./10 - processamentos/geo.gpkg"
+quadras <- st_read( arquivo2 , layer = "4.06 - Cadastro - Quadras fiscais sem subquadras" ) 
 
 # juntando quadras arrumadas ao tabelão
-IPTU_21_0 <- IPTU_21_0 %>% inner_join( quadras %>% select(SQ,geom) )
+IPTU_21_0 <- IPTU_21_0 %>%
+  inner_join( quadras %>% select(SQ,geom) ) %>%
+  st_as_sf(sf_column_name = "geom")
 
 # salvando
-arquivo <- paste0( "./20 - info/21 - por quadra - IPTU" , ".csv.gz")
+arquivo <- "./20 - info/21_2 - resumo por quadra.csv.gz"
 write_csv2( IPTU_21_0 , arquivo )
 
 ##############
