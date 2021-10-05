@@ -8,38 +8,21 @@ library(ggplot2)
 library(sf)
 library(readxl)
 
-########alvarás ########
+######## alvarás ########
 arquivo <- "./00 - dados brutos/msp_empreendimentos_sisacoe.xlsx"
 
 alvaras <- read_excel( arquivo ) %>%
-  # renomeando SQL pra ficar no padrão
-  rename( SQL = sql ) %>%
-  rename( SQ = sq ) %>%
-  mutate( 
-          # corrigindo camada de número
-          ac_total = as.numeric( str_replace_all( ac_total , "\\," , "\\." ) ),
-          # ano do processo administrativo
-          ano_proc_adm = as.numeric( str_sub( processo_adm , 0 , 4 ) ),
-          # SQL só números
-          SQL = str_replace_all( SQL , "\\." , "" )
-        ) %>%
-  # pegando só o alvará mais recente pra cada SQL
-  group_by( SQL ) %>%
-  slice_max( alvara_numero ) %>%
-  ungroup() %>%
   # calculando o total de área construída em cada ano de processo administrativo
-  group_by( ano_proc_adm ) %>%
+  group_by( ano_processo_adm ) %>%
   mutate( total_ano_processo = sum( ac_total ) ) %>%
   ungroup() %>%
   # calculando o total de área construída em cada ano de emissão de alvará
   group_by( alvara_ano_emissao ) %>%
   mutate( total_ano_emissao = sum( ac_total ) ) %>%
   ungroup() %>%
-  # só colunas necessárias
-  select( id , processo_adm , ano_proc_adm , alvara_numero , alvara_ano_emissao , SQ , SQL , 
-          legislacao_pde , legislacao_lpuos , ac_total , total_ano_processo , total_ano_emissao ) %>%
-  # só linhas válidas
-  filter( is.na( ano_proc_adm ) == FALSE )
+  # agrupando por quadra
+  group_by( ano_processo_adm ,  SQ , total_ano_processo , total_ano_emissao ) %>%
+  summarize( ac_total = sum( ac_total ) )
 
 # ------------------------------------------------------- #
 # ------------------------------------------------------- #
