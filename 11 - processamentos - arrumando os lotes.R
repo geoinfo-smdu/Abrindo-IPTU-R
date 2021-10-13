@@ -51,7 +51,7 @@ for (ano in ListaAnos){
             Pavs = as.numeric(Pavs),
             # arrumando condomínios pra não contar duplicado
             SQL = case_when(
-                            Condo != "00-0" ~ paste0( str_sub( SQL , 0 , 6) , "-C" , Condo ),
+                            Condo != "00-0" ~ paste0( str_sub( SQL , 0 , 6) , str_sub(Condo,0,2) ),
                             TRUE ~ SQL
                           )
           ) %>%
