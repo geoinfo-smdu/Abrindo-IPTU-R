@@ -44,8 +44,9 @@ for (ano in ListaAnos){
                    "TipoPadrão","TipoTerr","FatorObsoles"
   )
   
+  arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_loteArrumado.csv.gz")
   
-  temp <- temp %>%
+  temp %>%
     mutate(
             # arrumando campo de pavimentos
             Pavs = as.numeric(Pavs),
@@ -72,11 +73,7 @@ for (ano in ListaAnos){
     mutate(
             CA_lote = Construído/Terreno,
             TO_lote = Ocupado/Terreno
-          ) 
-  
-  
-  arquivo <- paste0( "./10 - processamentos/IPTU_" , ano , "_loteArrumado.csv.gz")
-  
-  write_csv2( temp , arquivo )
+          ) %>%
+  write_csv2( file = arquivo )
   
 }
