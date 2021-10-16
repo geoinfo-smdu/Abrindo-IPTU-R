@@ -85,6 +85,9 @@ for (ano in ListaAnos){
             UsoPadrão = paste( TipoUso , TipoPadrão ),
             # resumindo em usoH
             UsoH = case_when(
+                              str_detect( UsoPadrão , "^(Aparta).*(A|B)$" ) == TRUE ~ "14 - Uso Residencial Vertical Baixo Padrão",
+                              str_detect( UsoPadrão , "^(Aparta).*(C)$" ) == TRUE ~ "04 - Uso Residencial Vertical Médio Padrão",
+                              str_detect( UsoPadrão , "^(Aparta).*(D|E|F)$" ) == TRUE ~ "05 - Uso Residencial Vertical Alto Padrão",
                               str_detect( UsoPadrão , "^Escola" ) == TRUE ~ "11 - Uso Escola",
                               str_detect( UsoPadrão , "^Terreno" ) == TRUE ~ "13 - Terrenos Vagos",
                               str_detect( UsoPadrão , "^Garag.*(Comercial horizontal|Barra)" ) == TRUE ~ "15 - Uso garagens não-residenciais",
