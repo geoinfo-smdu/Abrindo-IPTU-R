@@ -71,3 +71,5 @@ vignettes/*.pdf
 00 - dados brutos/geo.gpkg-shm
 00 - dados brutos/geo.gpkg-wal
 10 - processamentos/IU PDE IPTU - 0 SISACOE.csv
+00 - dados brutos/tb_usoh_modificada.xls
+00 - dados brutos/tb_usoh.xls
