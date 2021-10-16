@@ -80,17 +80,18 @@ for (ano in ListaAnos){
                             Condo != "00-0" ~ paste0( str_sub( SQL , 0 , 6) , "0000" , str_sub(Condo,0,2) ),
                             TRUE ~ paste0( str_sub( SQL , 0 , 10) , str_sub(Condo,0,2) )
                           ),
-            
-            # traduzindo os usos-padrão
-            UsoPadrão = paste( TipoUso , TipoPadrão ),
+            # traduzindo os usos-padrão depois de tornar tudo maiúscula para evitar erros
+            UsoPadrão = toupper(paste( TipoUso , TipoPadrão )),
             # resumindo em usoH
             UsoH = case_when(
-                              str_detect( UsoPadrão , "^(Aparta).*(A|B)$" ) == TRUE ~ "14 - Uso Residencial Vertical Baixo Padrão",
-                              str_detect( UsoPadrão , "^(Aparta).*(C)$" ) == TRUE ~ "04 - Uso Residencial Vertical Médio Padrão",
-                              str_detect( UsoPadrão , "^(Aparta).*(D|E|F)$" ) == TRUE ~ "05 - Uso Residencial Vertical Alto Padrão",
-                              str_detect( UsoPadrão , "^Escola" ) == TRUE ~ "11 - Uso Escola",
-                              str_detect( UsoPadrão , "^Terreno" ) == TRUE ~ "13 - Terrenos Vagos",
-                              str_detect( UsoPadrão , "^Garag.*(Comercial horizontal|Barra)" ) == TRUE ~ "15 - Uso garagens não-residenciais",
+                              str_detect( UsoPadrão , "^(APARTA).*(A|B)$" ) == TRUE ~ "14 - Uso Residencial Vertical Baixo Padrão",
+                              str_detect( UsoPadrão , "^(APARTA).*(C)$" ) == TRUE ~ "04 - Uso Residencial Vertical Médio Padrão",
+                              str_detect( UsoPadrão , "^(APARTA).*(D|E|F)$" ) == TRUE ~ "05 - Uso Residencial Vertical Alto Padrão",
+                              str_detect( UsoPadrão , "^(IND).*(HORIZ|BARRA|ARMAZ)" ) == TRUE ~ "08 - Uso Industrial",
+                              str_detect( UsoPadrão , "^(ARMAZ).*(HORIZ|BARRA|ARMAZ)" ) == TRUE ~ "09 - Uso Armazéns e Depósitos",
+                              str_detect( UsoPadrão , "^ESCOLA" ) == TRUE ~ "11 - Uso Escola",
+                              str_detect( UsoPadrão , "^TERRE" ) == TRUE ~ "13 - Terrenos Vagos",
+                              str_detect( UsoPadrão , "^GARAG.*(HORIZ|BARRA)" ) == TRUE ~ "15 - Uso garagens não-residenciais",
                               
                               TRUE ~ "FALTA FAZER, no final vai ser 99"
                             )
