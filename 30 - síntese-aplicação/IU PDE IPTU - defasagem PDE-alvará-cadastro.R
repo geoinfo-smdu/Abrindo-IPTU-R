@@ -7,6 +7,7 @@ library(stats)
 library(ggplot2)
 library(sf)
 library(readxl)
+library(gridExtra)
 
 ######## arrumando arquivo-base ########
 arquivo <- "./00 - dados brutos/msp_empreendimentos_sisacoe.xlsx"
@@ -40,8 +41,17 @@ alvaras <- read_excel( arquivo ) %>%
 
 ######## defasagem PDE até alvará ########
 
+PDE_alvara <- alvaras %>%
+  group_by( ano_processo_adm , legislacao_pde ) %>%
+  summarize( n = n_distinct( id ) ) %>%
+  ungroup() %>%
+  filter( str_detect( legislacao_pde , "não presente" ) == FALSE ) %>%
+  pivot_wider( names_from = legislacao_pde , values_from = n )
 
 
+png("./30 - síntese-aplicação/IU PDE IPTU - defasagem PDE-alvará-cadastro - 1.png")
+grid.arrange( tableGrob(PDE_alvara) )
+dev.off()
 
 
 
