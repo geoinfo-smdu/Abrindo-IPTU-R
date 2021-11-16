@@ -6,13 +6,14 @@ library(lubridate)
 library(stats)
 library(ggplot2)
 library(sf)
+library(writexl)
 
 # caminho <- "pasta do repositório"
 
 ######## resumindo por quadra ########
 ####  ####
 # lista de anos com base do IPTU, de 1995 até o ano atual
-ListaAnos <- 1995:(year(today()))
+ListaAnos <- (year(today())):1995
 
 for (ano in ListaAnos){
   
